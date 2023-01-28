@@ -10,6 +10,7 @@
   gapi.load("client:auth2", () => {
     $googleAuth = gapi.auth2.init({
       client_id: config.CLIENT_ID,
+      scope: config.SCOPES.join(","),
     });
     $googleAuth.currentUser.listen(async (currentUser) => {
       if (currentUser.isSignedIn()) {

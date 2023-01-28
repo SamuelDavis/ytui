@@ -4,10 +4,10 @@
 </script>
 
 <figure {...$$restProps}>
-  {#if bubble}
+  {#if bubble !== null}
     <h3>{bubble}</h3>
   {/if}
-  {#if caption}
+  {#if caption !== null}
     <figcaption>{caption}</figcaption>
   {/if}
   <div><slot /></div>

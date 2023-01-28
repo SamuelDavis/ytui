@@ -9,7 +9,7 @@
     snippet: {
       localized: { title, description },
     },
-    contentDetails: { itemCount },
+    contentDetails: { itemCount = 0 } = {},
   } = playlist;
 </script>
 

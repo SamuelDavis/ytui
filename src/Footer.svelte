@@ -1,6 +1,14 @@
 <script lang="ts">
   import Deck from "./lib/Deck.svelte";
   import { draggable, dropzone } from "./directives.js";
+  import { createPlaylist } from "./api";
+  import { youtube } from "./store";
+
+  function onCreatePlaylist() {
+    const name = (prompt("Playlist Name") ?? "").trim();
+    if (!name) return;
+    createPlaylist($youtube, name);
+  }
 </script>
 
 <hr />
@@ -48,13 +56,15 @@
       </Deck>
     </li>
   </ol>
-  <Deck caption="Add new Playlist">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
-      <path
-        d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"
-      />
-    </svg>
-  </Deck>
+  <button on:click={onCreatePlaylist}>
+    <Deck caption="Add new Playlist">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+        <path
+          d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"
+        />
+      </svg>
+    </Deck>
+  </button>
   <Deck caption="Trash">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
       <path
@@ -69,6 +79,9 @@
 </footer>
 
 <style lang="css">
+  button {
+    all: unset;
+  }
   footer {
     display: flex;
     gap: 1em;
