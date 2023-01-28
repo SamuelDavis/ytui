@@ -1,5 +1,3 @@
-import type { Targeted } from "./types";
-
 export function draggable<T extends HTMLElement = HTMLElement>(e: T) {
   e.setAttribute("draggable", "true");
   e.addEventListener(
