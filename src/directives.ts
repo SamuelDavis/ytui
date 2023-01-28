@@ -1,7 +1,6 @@
 import type { Targeted } from "./types";
 
 export function draggable<T extends HTMLElement = HTMLElement>(e: T) {
-  console.log({ draggable: e });
   e.setAttribute("draggable", "true");
   e.addEventListener(
     "dragstart",

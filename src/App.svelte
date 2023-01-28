@@ -36,18 +36,20 @@
 </script>
 
 <Header />
-<main>
-  <section>
-    <ol>
-      {#each $playlists as playlist}
-        <li use:draggable>
-          <PlaylistComponent {playlist} />
-        </li>
-      {/each}
-    </ol>
-  </section>
-</main>
-<Footer />
+{#if $user}
+  <main>
+    <section>
+      <ol>
+        {#each $playlists as playlist}
+          <li use:draggable>
+            <PlaylistComponent {playlist} />
+          </li>
+        {/each}
+      </ol>
+    </section>
+  </main>
+  <Footer />
+{/if}
 
 <style lang="css">
   main {
