@@ -39,13 +39,17 @@
 {#if $user}
   <main>
     <section>
-      <ol>
-        {#each $playlists as playlist}
-          <li use:draggable>
-            <PlaylistComponent {playlist} />
-          </li>
-        {/each}
-      </ol>
+      {#if $playlists.length}
+        <ol>
+          {#each $playlists as playlist}
+            <li use:draggable>
+              <PlaylistComponent {playlist} />
+            </li>
+          {/each}
+        </ol>
+      {:else}
+        <h1>You have no YouTube playlists.</h1>
+      {/if}
     </section>
   </main>
   <Footer />
