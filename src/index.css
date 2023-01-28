@@ -1,0 +1,8 @@
+.dragging {
+  visibility: hidden;
+}
+
+.focus {
+  outline: lightgreen ridge 0.5em;
+  outline-offset: -0.5em;
+}
