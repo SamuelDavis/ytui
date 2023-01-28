@@ -30,6 +30,7 @@
     <button on:click={logIn}>Log In</button>
   {/if}
 </header>
+<hr />
 
 <style lang="css">
   header {
