@@ -2,7 +2,7 @@
   import Deck from "./lib/Deck.svelte";
   import { draggable, dropzone } from "./directives.js";
   import { createPlaylist, deletePlaylist } from "./api";
-  import { pendingDelete, youtube } from "./store";
+  import { pendingDelete, playlists, youtube } from "./store";
   import type { Playlist } from "./types";
 
   function onCreatePlaylist() {
@@ -22,19 +22,25 @@
   }
 
   function onDelete() {
-    pendingDelete.update((playlists) => {
-      const titles = Object.values(playlists);
-      if (titles.length === 0) return playlists;
+    pendingDelete.update((pending) => {
+      const titles = Object.values(pending);
+      if (titles.length === 0) return pending;
 
       const confirmation = `The following playlists will be deleted:\n${titles.join(
         "\n"
       )}`;
-      if (!confirm(confirmation)) return playlists;
+      if (!confirm(confirmation)) return pending;
 
       const client = $youtube;
-      Object.keys(playlists).forEach((id) => deletePlaylist(client, id));
+      Object.keys(pending).forEach((id) => deletePlaylist(client, id));
 
-      return {} as typeof playlists;
+      playlists.update((playlists) =>
+        Object.fromEntries(
+          Object.entries(playlists).filter(([key, _]) => !(key in pending))
+        )
+      );
+
+      return {} as typeof pending;
     });
   }
 </script>
