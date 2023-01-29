@@ -1,7 +1,13 @@
 <script lang="ts">
   import config from "../config.json";
   import PlaylistComponent from "./Playlist.svelte";
-  import { googleAuth, youtube, user, playlists } from "./store";
+  import {
+    googleAuth,
+    youtube,
+    user,
+    playlists,
+    activePlaylists,
+  } from "./store";
   import Header from "./Header.svelte";
   import Footer from "./Footer.svelte";
   import { fetchPlaylists } from "./api";
@@ -20,17 +26,22 @@
           config.DISCOVERY_DOCS.map((url) => gapi.client.load(url))
         );
         $youtube = gapi.client.youtube;
-        if ($playlists.length) {
+        if (Object.keys($playlists).length) {
           console.info("Playlists already fetched.");
         } else {
           console.info("Fetching playlists");
           for await (const items of fetchPlaylists($youtube))
-            $playlists = [...$playlists, ...items];
+            playlists.update((playlists) =>
+              items.reduce(
+                (acc, playlist) => ({ ...acc, [playlist.id]: playlist }),
+                playlists
+              )
+            );
         }
       } else {
         $user = null;
         $youtube = null;
-        $playlists = [];
+        $playlists = {};
       }
     });
   });
@@ -40,17 +51,17 @@
 {#if $user}
   <main>
     <section>
-      {#if $playlists.length}
-        <ol>
-          {#each $playlists as playlist}
-            <li use:draggable>
-              <PlaylistComponent {playlist} />
-            </li>
-          {/each}
-        </ol>
-      {:else}
-        <h1>You have no YouTube playlists.</h1>
-      {/if}
+      <ol>
+        {#each $activePlaylists as playlist (playlist.id)}
+          <li use:draggable={playlist}>
+            <PlaylistComponent {playlist} />
+          </li>
+        {:else}
+          <li>
+            <h1>You have no YouTube playlists.</h1>
+          </li>
+        {/each}
+      </ol>
     </section>
   </main>
   <Footer />

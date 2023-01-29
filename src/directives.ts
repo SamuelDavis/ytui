@@ -1,32 +1,46 @@
-export function draggable<T extends HTMLElement = HTMLElement>(e: T) {
-  e.setAttribute("draggable", "true");
-  e.addEventListener(
-    "dragstart",
-    () => {
-      setTimeout(() => {
-        e.classList.add("dragging");
-      });
-    },
-    true
-  );
-  e.addEventListener(
-    "dragend",
-    () => {
-      e.classList.remove("dragging");
-      document
-        .querySelectorAll(".focus")
-        .forEach((el) => el.classList.remove("focus"));
-    },
-    true
-  );
+export function draggable<D, T extends HTMLElement = HTMLElement>(
+  el: T,
+  data: D = null
+) {
+  el.setAttribute("draggable", "true");
+  el.addEventListener("dragstart", (e) => {
+    if (data !== null)
+      e.dataTransfer.setData("application/json", JSON.stringify(data));
+    setTimeout(() => {
+      el.classList.add("dragging");
+    });
+  });
+  el.addEventListener("dragend", () => {
+    el.classList.remove("dragging");
+  });
 }
 
-export function dropzone<T extends HTMLElement = HTMLElement>(e: T) {
-  e.addEventListener(
+export function dropzone<D, T extends HTMLElement = HTMLElement>(
+  el: T,
+  onDrop: (data: D, el: T) => void = null
+) {
+  let counter = 0;
+  el.addEventListener(
     "dragenter",
     () => {
-      e.classList.add("focus");
+      counter++;
+      el.classList.add("focus");
     },
     true
   );
+  el.addEventListener("dragleave", () => {
+    counter--;
+    if (counter === 0) el.classList.remove("focus");
+  });
+  if (onDrop !== null) {
+    el.addEventListener("dragover", (e) => {
+      e.preventDefault();
+    });
+    el.addEventListener("drop", (e) => {
+      const data = JSON.parse(
+        e.dataTransfer.getData("application/json") ?? "null"
+      ) as D;
+      onDrop(data, el);
+    });
+  }
 }

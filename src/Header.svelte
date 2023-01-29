@@ -45,6 +45,7 @@
     display: flex;
     gap: 1em;
     align-items: center;
+    margin: 0;
   }
 
   header figure img {

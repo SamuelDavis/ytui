@@ -30,6 +30,17 @@ export async function createPlaylist(client: YouTube, title: string) {
     },
   });
   const { status, result } = response;
-  if (status === 200) playlists.update((playlists) => [...playlists, result]);
+  if (status === 200)
+    playlists.update((playlists) => ({ ...playlists, [result.id]: result }));
   else console.error("create playlist", response);
+}
+
+export async function deletePlaylist(client: YouTube, id: string) {
+  const response = await client.playlists.delete({
+    id,
+  });
+
+  const { status } = response;
+  if (status === 204) playlists.update(({ [id]: _, ...rest }) => rest);
+  else console.error("delete playlist", response);
 }

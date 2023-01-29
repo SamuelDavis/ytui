@@ -1,8 +1,15 @@
+button {
+  all: unset;
+  cursor: pointer;
+  padding: 0;
+  height: fit-content;
+  width: fit-content;
+}
+
 .dragging {
   visibility: hidden;
 }
 
 .focus {
-  outline: lightgreen ridge 0.5em;
-  outline-offset: -0.5em;
+  background-color: rgba(144, 238, 144, 0.25);
 }
