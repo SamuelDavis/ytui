@@ -1,9 +1,11 @@
 <script lang="ts">
   import Deck from "./lib/Deck.svelte";
   import { draggable, dropzone } from "./directives.js";
-  import { createPlaylist, deletePlaylist } from "./api";
-  import { pendingDelete, playlists, youtube } from "./store";
+  import { createPlaylist, deletePlaylist, fetchPlaylistItems } from "./api";
+  import { hand, pendingDelete, playlists, youtube } from "./store";
   import type { Playlist } from "./types";
+  import { activeHand } from "./store.js";
+  import PlaylistItemComponent from "./PlaylistItem.svelte";
 
   function onCreatePlaylist() {
     const name = (prompt("Playlist Name") ?? "").trim();
@@ -11,8 +13,15 @@
     createPlaylist($youtube, name);
   }
 
-  function onLoadPlaylist(playlist: Playlist) {
-    console.debug({ load: playlist });
+  async function onLoadPlaylist(playlist: Playlist) {
+    hand.set({});
+    for await (const items of fetchPlaylistItems($youtube, playlist.id))
+      hand.update((hand) =>
+        items.reduce(
+          (acc, playlist) => ({ ...acc, [playlist.id]: playlist }),
+          hand
+        )
+      );
   }
   function onDeletePlaylist(playlist: Playlist) {
     pendingDelete.update((value) => ({
@@ -62,19 +71,9 @@
         </svg>
       </Deck>
     </li>
-    {#each new Array(10).fill(undefined) as _, i}
-      <li use:draggable>
-        <Deck caption={`Video ${i}`}>
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <path
-              fill-rule="evenodd"
-              clip-rule="evenodd"
-              d="M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21ZM12 23C18.0751 23 23 18.0751 23 12C23 5.92487 18.0751 1 12 1C5.92487 1 1 5.92487 1 12C1 18.0751 5.92487 23 12 23Z"
-              fill="currentColor"
-            />
-            <path d="M16 12L10 16.3301V7.66987L16 12Z" fill="currentColor" />
-          </svg>
-        </Deck>
+    {#each $activeHand as item (item.id)}
+      <li use:draggable={item}>
+        <PlaylistItemComponent {item} />
       </li>
     {/each}
     <li>

@@ -1,5 +1,11 @@
 import { derived, writable } from "svelte/store";
-import type { GoogleAuth, GoogleUser, Playlist, YouTube } from "./types";
+import type {
+  GoogleAuth,
+  GoogleUser,
+  Playlist,
+  PlaylistItem,
+  YouTube,
+} from "./types";
 
 export const youtube = writable<YouTube>(null);
 export const googleAuth = writable<GoogleAuth>(null);
@@ -12,12 +18,20 @@ export const pendingDelete = persistent<
   Record<Playlist["id"], Playlist["snippet"]["title"]>
 >("pendingDelete", {});
 
+export const hand = writable<Record<PlaylistItem["id"], PlaylistItem>>({});
+
 export const activePlaylists = derived(
   [playlists, pendingDelete],
   ([playlists, pendingDelete]) =>
     Object.values(playlists).filter(
       (playlist) => !(playlist.id in pendingDelete)
     ),
+  []
+);
+export const activeHand = derived(
+  [hand, pendingDelete],
+  ([hand, pendingDelete]) =>
+    Object.values(hand).filter((playlist) => !(playlist.id in pendingDelete)),
   []
 );
 

@@ -9,6 +9,7 @@
   {/if}
   {#if caption !== null}
     <figcaption>{caption}</figcaption>
+    <hr />
   {/if}
   <div><slot /></div>
 </figure>
@@ -31,6 +32,11 @@
     align-items: center;
     padding: 0.5em;
     overflow: hidden;
+    gap: 0.25em;
+  }
+
+  figure hr {
+    width: 100%;
   }
 
   h3 {
@@ -57,7 +63,11 @@
   }
 
   figcaption {
+    width: 100%;
     font-weight: bolder;
     text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 </style>

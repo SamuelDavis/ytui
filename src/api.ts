@@ -1,13 +1,32 @@
 import type { Playlist, YouTube } from "./types";
 import { playlists } from "./store";
 
+export async function* fetchPlaylistItems(
+  client: YouTube,
+  playlistId: Playlist["id"]
+) {
+  let status = 200;
+  let pageToken = null;
+  do {
+    const response = await client.playlistItems.list({
+      pageToken,
+      playlistId,
+      part: ["id,snippet,contentDetails"],
+      maxResults: 100,
+    });
+    status = response.status;
+    pageToken = response.result.nextPageToken;
+    yield response.result.items;
+  } while (status === 200 && pageToken);
+}
+
 export async function* fetchPlaylists(client: YouTube) {
   let status = 200;
   let pageToken = null;
   do {
     const response = await client.playlists.list({
       pageToken,
-      maxResults: 5,
+      maxResults: 100,
       mine: true,
       part: "id,snippet,contentDetails",
     });

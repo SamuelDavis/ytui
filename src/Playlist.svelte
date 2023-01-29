@@ -15,7 +15,7 @@
 
 <Deck
   {id}
-  title={JSON.stringify(playlist, null, 2)}
+  title={title + "\n" + description + "\n" + JSON.stringify(playlist, null, 2)}
   caption={title}
   bubble={itemCount}
 >
