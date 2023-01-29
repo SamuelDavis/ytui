@@ -12,6 +12,9 @@ export function draggable<D, T extends HTMLElement = HTMLElement>(
   });
   el.addEventListener("dragend", () => {
     el.classList.remove("dragging");
+    document
+      .querySelectorAll(".focus")
+      .forEach((el) => el.classList.remove("focus"));
   });
 }
 
@@ -37,7 +40,6 @@ export function dropzone<D, T extends HTMLElement = HTMLElement>(
       e.preventDefault();
     });
     el.addEventListener("drop", (e) => {
-      el.classList.remove("focus");
       const data = JSON.parse(
         e.dataTransfer.getData("application/json") ?? "null"
       ) as D;
