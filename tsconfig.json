@@ -14,7 +14,13 @@
     "allowJs": true,
     "checkJs": true,
     "isolatedModules": true,
-    "types": ["gapi", "gapi.auth2", "gapi.client", "gapi.client.youtube"]
+    "types": [
+      "@types/error-cause",
+      "gapi",
+      "gapi.auth2",
+      "gapi.client",
+      "gapi.client.youtube"
+    ]
   },
   "include": ["src/**/*.d.ts", "src/**/*.ts", "src/**/*.js", "src/**/*.svelte"],
   "references": [{ "path": "./tsconfig.node.json" }]

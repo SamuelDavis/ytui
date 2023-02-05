@@ -1,15 +1,35 @@
-button {
-  all: unset;
-  cursor: pointer;
-  padding: 0;
-  height: fit-content;
-  width: fit-content;
+:root {
+  --border-radius: 20px;
 }
 
-.dragging {
+* {
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  margin: 0;
+  padding: 1em;
+}
+
+hr {
+  width: 100%;
+}
+
+.dragging,
+.dragging * {
   visibility: hidden;
 }
 
-.focus {
-  background-color: rgba(144, 238, 144, 0.25);
+.focus,
+.focus * {
+  background-color: lightgreen;
+}
+.focus img {
+  filter: opacity(50%);
 }

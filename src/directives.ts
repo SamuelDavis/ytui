@@ -1,49 +1,41 @@
-export function draggable<D, T extends HTMLElement = HTMLElement>(
-  el: T,
-  data: D = null
-) {
+export function draggable<D>(el: HTMLElement, data: D) {
   el.setAttribute("draggable", "true");
   el.addEventListener("dragstart", (e) => {
-    if (data !== null)
-      e.dataTransfer.setData("application/json", JSON.stringify(data));
+    e.dataTransfer.setData("application/json", JSON.stringify(data));
     setTimeout(() => {
       el.classList.add("dragging");
     });
   });
-  el.addEventListener("dragend", () => {
+  el.addEventListener("dragend", (e) => {
     el.classList.remove("dragging");
-    document
-      .querySelectorAll(".focus")
-      .forEach((el) => el.classList.remove("focus"));
   });
 }
 
-export function dropzone<D, T extends HTMLElement = HTMLElement>(
-  el: T,
-  onDrop: (data: D, el: T) => void = null
-) {
-  let counter = 0;
-  el.addEventListener(
-    "dragenter",
-    () => {
-      counter++;
-      el.classList.add("focus");
-    },
-    true
-  );
-  el.addEventListener("dragleave", () => {
-    counter--;
-    if (counter === 0) el.classList.remove("focus");
+export function dropzone<D>(el: HTMLElement, onDrop: (data: D) => void) {
+  el.addEventListener("dragenter", (e) => {
+    el.classList.add("focus");
   });
-  if (onDrop !== null) {
-    el.addEventListener("dragover", (e) => {
-      e.preventDefault();
-    });
-    el.addEventListener("drop", (e) => {
-      const data = JSON.parse(
-        e.dataTransfer.getData("application/json") ?? "null"
-      ) as D;
-      onDrop(data, el);
-    });
-  }
+  el.addEventListener(
+    "dragleave",
+    (e: DragEvent & { fromElement: HTMLElement }) => {
+      if (
+        el.compareDocumentPosition(e.fromElement) &
+        Node.DOCUMENT_POSITION_CONTAINED_BY
+      ) {
+        e.preventDefault();
+        return false;
+      }
+      el.classList.remove("focus");
+    }
+  );
+  el.addEventListener("dragover", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    return false;
+  });
+  el.addEventListener("drop", (e) => {
+    const data = e.dataTransfer.getData("application/json") || "null";
+    onDrop(JSON.parse(data) as D);
+    el.classList.remove("focus");
+  });
 }

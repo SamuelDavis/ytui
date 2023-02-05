@@ -1,57 +1,14 @@
 <script lang="ts">
-  import { googleAuth, user } from "./store";
+  import { auth, user } from "./stores";
 
-  function logIn() {
-    $googleAuth.signIn();
-  }
-
-  function logOut() {
-    $googleAuth.signOut();
-    localStorage.clear();
-  }
-
-  $: profile = $user?.getBasicProfile();
+  const signIn = () => $auth.signIn();
+  const signOut = () => $auth.signOut();
 </script>
 
 <header>
   {#if $user}
-    <button on:click={logOut}>Log Out</button>
-    <figure>
-      <img
-        referrerpolicy="no-referrer"
-        src={profile?.getImageUrl()}
-        alt={profile?.getName()}
-      />
-      <figcaption>
-        {profile?.getEmail()}
-      </figcaption>
-    </figure>
+    <button on:click={signOut}>Sign Out</button>
   {:else}
-    <button on:click={logIn}>Log In</button>
+    <button on:click={signIn}>Sign In</button>
   {/if}
 </header>
-<hr />
-
-<style lang="css">
-  header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-direction: row-reverse;
-    height: 2em;
-  }
-
-  header figure {
-    display: flex;
-    gap: 1em;
-    align-items: center;
-    margin: 0;
-  }
-
-  header figure img {
-    width: 2em;
-    aspect-ratio: 1;
-    border-radius: 50%;
-    overflow: hidden;
-  }
-</style>
