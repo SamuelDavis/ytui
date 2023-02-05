@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { Playlist, Thumbnail, Video } from "./types";
-  import { getKind } from "./types";
+  import { getKind, isPlaylist } from "./types";
   import { isVideo, Kind } from "./types.js";
   import Card from "./Card.svelte";
   import { deleted } from "./stores.js";
@@ -10,6 +10,15 @@
     snippet: { title, description, thumbnails },
     contentDetails: { itemCount = 0 },
   } = data;
+
+  const href = isPlaylist(data)
+    ? `https://www.youtube.com/playlist?list=${data.id}`
+    : `https://www.youtube.com/watch?${new URLSearchParams({
+        v: data.contentDetails.videoId,
+        list: data.snippet.playlistId,
+        index: data.snippet.position.toString(),
+      })}`;
+
   const src = thumbnails?.default?.url ?? "";
   const srcset = Object.values(thumbnails).map((value: Thumbnail) => {
     const { url, width, height } = value;
@@ -26,7 +35,7 @@
 
 <Card {count}>
   <svelte:fragment slot="header">
-    {title || description}
+    <a {href} rel="noreferrer" target="_blank">{title || description}</a>
   </svelte:fragment>
   <img alt="thumbnail" {src} {srcset} />
 </Card>
