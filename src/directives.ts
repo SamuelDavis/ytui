@@ -19,8 +19,9 @@ export function dropzone<D>(el: HTMLElement, onDrop: (data: D) => void) {
     "dragleave",
     (e: DragEvent & { fromElement: HTMLElement }) => {
       if (
+        e.fromElement instanceof Node &&
         el.compareDocumentPosition(e.fromElement) &
-        Node.DOCUMENT_POSITION_CONTAINED_BY
+          Node.DOCUMENT_POSITION_CONTAINED_BY
       ) {
         e.preventDefault();
         return false;

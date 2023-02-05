@@ -35,13 +35,16 @@
 
 <Card {count}>
   <svelte:fragment slot="header">
-    <a {href} rel="noreferrer" target="_blank">{title || description}</a>
+    <a {href} rel="noreferrer" target="_blank" on:drag|preventDefault
+      >{title || description}</a
+    >
   </svelte:fragment>
   <img alt="thumbnail" {src} {srcset} />
 </Card>
 
 <style>
   img {
+    pointer-events: none;
     height: 100%;
   }
 </style>

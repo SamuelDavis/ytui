@@ -87,9 +87,8 @@ export function onReviewPendingDeletions() {
 }
 
 export async function onSelect(item: Playlist | Item[]) {
-  if (isPlaylist(item))
-    selected.set(await generatorToArray(get(api).listVideos(item.id)));
-  else selected.set(item);
+  if (!isPlaylist(item)) return;
+  selected.set(await generatorToArray(get(api).listVideos(item.id)));
 }
 
 export function onAddToPlaylist(playlist: Playlist) {

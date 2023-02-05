@@ -13,7 +13,7 @@
 <Header />
 <hr />
 {#if $user}
-  <Main />
-  <hr />
   <Selected />
+  <hr />
+  <Main />
 {/if}
